@@ -1,0 +1,229 @@
+#!/usr/bin/perl -sw
+
+my $continueOnError = 0;
+if (defined $c) {
+	$continueOnError = 1;
+}
+$c="";
+
+my $multiCore = 1;
+if (defined $mc) {
+	$multiCore = $mc;
+}
+$mc = "";
+
+
+
+use strict;
+
+my $logFH = newLog("test/lastTest");
+
+my $testPassed = 0;
+&runStandartTest();
+
+if ($multiCore > 1) {
+	&runMultiCoreTest($multiCore);
+}
+
+closeLog();
+
+sub runStandartTest {
+
+	write2Log("Running standart tests");
+	my $failedTests = 0;
+	$failedTests += runFAtest("", "data/tRNA.motif.fasta", "default.tRNA.motif.fasta", "default.tRNA.motif.fasta");
+	$failedTests += runFAtest("-score_matrix scorematrix/scanning.default.fmat", "data/tRNA.motif.fasta", "scorematrix.tRNA.motif.fasta", "scorematrix.tRNA.motif.fasta");
+	$failedTests += runFAtest("-format tab", "data/tRNA.motif.tab", "default.tRNA.motif.tab", "default.tRNA.motif.tab");
+	$failedTests += runFAtest("-format pair", "data/tRNA.motif.pair", "default.tRNA.motif.pair", "default.tRNA.motif.pair");
+
+	$failedTests += runFAtest("-output_format summary", "data/tRNA.motif.fasta", "summary.tRNA.motif.fasta", "summary.tRNA.motif.fasta");
+	$failedTests += runFAtest("-output_format stockholm", "data/tRNA.motif.fasta", "stockholm.tRNA.motif.fasta", "stockholm.tRNA.motif.fasta");
+	
+	$failedTests += runFAtest("-global", "data/tRNA.motif.fasta", "global.tRNA.motif.fasta", "global.tRNA.motif.fasta");
+	$failedTests += runFAtest("-plot_score", "data/tRNA.motif.fasta", "plot_score.tRNA.motif.fasta", "plot_score.tRNA.motif.fasta");
+
+	$failedTests += runFAtest("-max_diff 1", "data/tRNA.motif.fasta", "delta1.tRNA.motif.fasta", "delta1.tRNA.motif.fasta");
+	$failedTests += runFAtest("-max_length 20", "data/tRNA.motif.fasta", "lambda20.tRNA.motif.fasta", "lambda20.tRNA.motif.fasta");
+
+#	$failedTests += testConstraints("data/tRNA.500.nl.pair", "constraints.tRNA.500.nl.pair", "constraints.tRNA.500.nl.pair");
+
+	if ($failedTests > 0) {
+		write2Log("$failedTests tests failed.");
+	}
+	else {
+		write2Log("All standart tests passed");
+	}
+}
+
+sub runMultiCoreTest {
+
+	my ($numberOfTests) = @_;
+
+	write2Log("Running multithread tests");
+	testWithNumProcessors($numberOfTests, 2);
+	testWithNumProcessors($numberOfTests, 4);
+	testWithNumProcessors($numberOfTests, 40);
+}
+
+sub testWithNumProcessors {
+
+	my ($numberOfTests, $numberOfProcessors) = @_;
+	
+
+	my $failedTests = 0;
+	for(my $i=0; $i < $numberOfTests; $i++) {
+		$failedTests += runFAtest("-number_of_processors $numberOfTests", "data/tRNA.motif.fasta", "default.tRNA.motif.fasta.$numberOfTests.$i", "default.tRNA.motif.fasta");
+	}
+	if ($failedTests > 0) {
+		write2Log("$failedTests tests out of $numberOfTests failed with $numberOfTests processors");
+	}
+	else {
+		write2Log("All $numberOfTests tests with $numberOfProcessors threads passed");
+	}
+}
+
+sub runFAtest {
+
+	my ($options, $data, $resultName, $expectedName) = @_;
+	
+	if (not -e "test/expected/$expectedName") {
+		write2Log("Test setup error! Missing expected file: test/expected/$expectedName The test can not be performed");
+		write2Log("Test failed: Options: $options Input data: $data Filename: $resultName Expected output: $expectedName");
+		
+		if ($continueOnError) {
+			return 1;
+		}
+		else {
+			exit;
+		}
+	}
+
+	`bin/foldalign $options $data > test/results/$resultName`;
+
+	my @errors = `diff test/results/$resultName test/expected/$expectedName`;
+
+	removeFalseErrorsDueToVersionNumber(\@errors);
+	
+	if (not @errors) {
+		$testPassed++;
+		`rm test/results/$resultName`;
+		return 0;
+	}
+	
+	write2Log("Number of test passed before failed test: $testPassed");
+	write2Log("Test failed: Options: $options Input data: $data Filename: $resultName Expected output: $expectedName");
+	write2Log(join("", @errors));
+	write2Log(("=" x 79));
+	
+	if ($continueOnError) {
+		return 1;
+	}
+	else {
+		exit;
+	}
+}
+
+sub testConstraints {
+
+	my ($data, $resultName, $expectedName) = @_;
+	
+	if (not -e "test/expected/$expectedName") {
+		write2Log( "Test setup error! Missing expected file: test/expected/$expectedName The test can not be performed");
+		write2Log("Test failed: Constraints. Input data: $data Filename: $resultName Expected output: $expectedName");
+		
+		if ($continueOnError) {
+			return 1;
+		}
+		else {
+			exit;
+		}
+	}
+
+	my $errorCount = 0;
+	`bin/foldalign -print_seed_constraints -max_length 30 -no_backtrack -format pair $data | grep Cons. | gawk '\$5 + \$6 > 0 || \$1 == "MAX_LENGTH:"' > test/results/constraints`;
+	
+	my @errorsConstraints = `diff test/results/constraints test/expected/constraints`;
+	
+	`bin/foldalign -seed_constraints test/results/constraints -plot_score -format pair $data > test/results/$resultName`;
+	
+	my @errorsRun = `diff test/results/$resultName test/expected/$expectedName`;
+
+	removeFalseErrorsDueToVersionNumber(\@errorsRun);
+	
+	if (not @errorsConstraints and not @errorsRun) {
+		$testPassed++;
+		`rm test/results/constraints`;
+		`rm test/results/$resultName`;
+		return 0;
+	}
+	
+	write2Log("Number of test passed before failed test: $testPassed");
+	write2Log("Test failed: Constraints. Input data: $data Filename: $resultName Expected output: $expectedName");
+	if (@errorsConstraints) {
+		write2Log("Errors in constraints file:");
+		write2Log(join("", @errorsConstraints));
+		write2Log(("=" x 79));
+	}
+	if (@errorsRun) {
+		write2Log("Errors in Foldalign output file:");
+		write2Log(join("", @errorsRun));
+		write2Log(("=" x 79));
+	}
+	
+	if ($continueOnError) {
+		return 1;
+	}
+	else {
+		exit;
+	}
+}
+
+sub removeFalseErrorsDueToVersionNumber {
+
+	my ($errors) = @_;
+	
+	for(my $i=$#$errors-3; $i>=0; $i--) {
+		if (
+	    $$errors[$i] =~ /^\d+c\d+\n$/ and
+	    $$errors[$i+1] =~ /^< ; FOLDALIGN           2.2.develop.sub_rev_\d*\s*$/ and
+	    $$errors[$i+2] =~ /---/ and
+		 $$errors[$i+3] =~ /^> ; FOLDALIGN           2.2.develop.sub_rev_\d*\s*$/
+		 ) {
+			removeLines($errors, $i);
+		}
+	}
+	if ($#$errors >= 3 and
+		 $$errors[0] =~ /^3c3\n$/ and
+		 $$errors[1] =~ /^< #=GF VERSION            2.2.develop.sub_rev_\d*\s*$/ and
+	    $$errors[2] =~ /---/ and
+		 $$errors[3] =~ /^> #=GF VERSION            2.2.develop.sub_rev_\d*\s*$/) {
+		removeLines($errors, 0);
+	}
+}
+
+sub removeLines {
+	my ($errors, $i) = @_;
+	
+	splice(@$errors, $i, 4);
+}
+	
+sub newLog {
+
+	my ($fileName) = @_;
+	
+	my $fh;
+	open $fh, ">", "$fileName" or warn "Could not open log file: $fileName => $!\n";
+
+	return $fh;
+}
+
+sub write2Log {
+	my ($message) = @_;
+	
+	print "$message\n";
+	print $logFH "$message\n";
+}
+
+sub closeLog {
+	close $logFH;
+}

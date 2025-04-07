@@ -1,0 +1,110 @@
+#!/usr/bin/perl -sw
+
+###############################################################################
+#                                                                             #
+#   Copyright 2004 Jakob Hull Havgaard, hull@bioinf.kvl.dk                    #
+#                                                                             #
+#   This program is free software; you can redistribute it and/or modify      #
+#   it under the terms of the GNU General Public License as published by      #
+#   the Free Software Foundation; either version 2 of the License, or         #
+#   (at your option) any later version.                                       #
+#                                                                             #
+#   This program is distributed in the hope that it will be useful,           #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#   GNU General Public License for more details.                              #
+#                                                                             #
+#   You should have received a copy of the GNU General Public License         #
+#   along with this program; if not, write to the Free Software               #
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA #
+#                                                                             #
+###############################################################################
+
+
+my $script_name = "scalematrix";
+
+if ((defined $h) or (defined $help)) {
+	print "Usage:\n";
+	print "$script_name -ss=<weight 1> -bp=<weight 2> score_matrix_file\n";
+	print "\n";
+	print "This script rescales FOLDALIGN score matrices\n";
+	print "The 'Single strand substitution:' matrix will be rescaled by the value of\n";
+	print "<weight 1>. Default: 1\n";
+	print "The 'Base-pair substitution:' matrix will be rescaled with the value of \n";
+	print "<weight 2>. Default: 1\n";
+	exit;
+}
+$h = $help = "";
+
+my $single = 1;
+if (defined $ss) {$single = $ss;}
+$ss="";
+
+my $base = 1;
+if (defined $bp) {$base = $bp;}
+$bp="";
+
+use strict;
+
+print "# This matrix was rescaled with $script_name\n";
+print "# Options: -ss=$single -bp=$base\n";
+if (defined $ARGV[0]) {
+	print "# Input file: $ARGV[0]\n";
+}
+else {
+	print "# Input file: -\n";
+}
+print "# ";
+print scalar localtime;
+print "\n\n";
+
+while (<>) {
+	if (/^Single strand substitution:/) {print; &rescale2($single);}
+	elsif (/^Base-pair substitution:/) {print; &rescale4($base);}
+	else {print;}
+}
+
+####################### Sub routines below ###################################
+
+sub rescale2 {
+	my ($weight) = @_;
+	
+	# Skip the first line
+	$_ = <>; print;
+	
+	while (<>) {
+		if (/^\s*$/) {print; last;}
+		s/^\s*//;
+		my @line = split(/\s+/);
+		chomp;
+		for(my $i=0; $i<$#line; $i++) { # The last field is the letter
+			my $val = int($weight*$line[$i] + 0.5);
+			printf "%5d ", $val;
+		}
+		print "$line[-1]\n";
+	}
+	if (eof) {exit;}
+}
+
+sub rescale4 {
+	my ($weight) = @_;
+	
+	# Skip the first two lines
+	$_ = <>; print;
+	$_ = <>; print;
+	
+	while (<>) {
+		if (/^\s*$/) {print; last;}
+		s/^\s*//;
+		my @line = split(/\s+/);
+		chomp;
+			my $val = int($weight*$line[0] + 0.5);
+			print "$val ";
+		for(my $i=1; $i<$#line-1; $i++) { # The last two fields are letters
+			$val = int($weight*$line[$i] + 0.5);
+			printf "%4d ", $val;
+		}
+		print "$line[-2] $line[-1]\n";
+	}
+	if (eof) {exit;}
+}

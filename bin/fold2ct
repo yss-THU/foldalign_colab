@@ -1,0 +1,163 @@
+#!/usr/bin/perl -sw
+
+###############################################################################
+#                                                                             #
+#   Copyright 2005 Jakob Hull Havgaard, hull@bioinf.kvl.dk                    #
+#                                                                             #
+#   This program is free software; you can redistribute it and/or modify      #
+#   it under the terms of the GNU General Public License as published by      #
+#   the Free Software Foundation; either version 2 of the License, or         #
+#   (at your option) any later version.                                       #
+#                                                                             #
+#   This program is distributed in the hope that it will be useful,           #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#   GNU General Public License for more details.                              #
+#                                                                             #
+#   You should have received a copy of the GNU General Public License         #
+#   along with this program; if not, write to the Free Software               #
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA #
+#                                                                             #
+###############################################################################
+
+my $prefix ="";
+if (defined $pre) {$prefix=$pre;}
+$pre="";
+
+my $postfix = ".ct";
+if (defined $post) {$postfix = $post;}
+$post="";
+
+if ((defined $h) or (defined $help)) {
+	print "Usage:\n";
+	print "fold2ct [-pre=<prefix name>] [-post=<file extension>] <foldalign.file>\n";
+	print "\n";
+	print "Converts the entries in the FOLDALIGN input file to files in ct format. Two ct\n";
+	print "files are made for each FOLDALIGN alignment. The name of a file will by default\n";
+	print "be:\n";
+	print "SequenceName1-SequenceName2.ct  (Characters unfit for filenames are removed).\n";
+	print "If a file with the same name already exists, the new file is given an index\n";
+	print "number.\n";
+	print "The energy reported is the alignment score divided by -10 (not the energy).\n";
+	print "\n";
+	print "Options:\n";
+	print "-pre=<prefix name>     Prefix all file names with <prefix name>.\n";
+	print "-post=<file extension> Change the .ct filename extension to <file extension>.\n";
+	exit;
+}
+$help = $h = "";
+
+use strict;
+
+while (<>) {
+	if (/^; FOLDALIGN           \d/) {&readEntry($prefix, $postfix);}
+}
+
+#################### Only sub routine below ###################################
+
+sub readEntry {
+	my ($pre, $post) = @_;
+
+	while (<>) {
+		if (/^; TYPE                Foldalign_local_scores/) {&skipLS();}
+		elsif (/^; TYPE                RNA/) {&parseEntry($pre, $post);}
+	}
+
+}
+
+sub skipLS {
+	while (<>) {
+		if (/^; \*\*\*\*\*/) {last;}
+	}
+}
+
+sub parseEntry {
+	my ($pre, $post) = @_;
+	
+	my $name;        # Name of the current sequence
+	my $name1;       # The name of the fist sequence
+	my $name2;       # The name of the second sequence
+	my $start;       # Start position of the alignment
+	my $seqpos_bp = -1; # The seqpos column number
+	my $res    = -1; # The residue column number
+	my $label  = -1; # The label column number
+	my $score;       # The alignment score
+	
+	# Parse the header
+	while (<>) {
+		if (/^; \*\*\*\*\*/) {last;}
+		elsif (/^; ENTRY\s+(\S+)/) {$name = $1;}
+		elsif (/^; START_POSITION\s+(\d+)/) {$start = $1;}
+		elsif (/^; COL\s+(\d+)\s+seqpos_bp/) {$seqpos_bp=$1;}
+		elsif (/^; COL\s+(\d+)\s+residue/) {$res=$1;}
+		elsif (/^; COL\s+(\d+)\s+label/) {$label=$1;}
+		elsif (/^; FOLDALIGN_SCORE\s+(-?\d+)/) {$score = $1;}
+		elsif (/^; ALIGNMENT_LIST      (\S+) (\S+)/) {$name1=$1; $name2=$2;}
+		elsif (/^; -{5}/) {last;}
+	}
+	if (eof) {exit;}
+	
+	# If this is the second sequence switch the names
+	if ($name eq $name2) {my $tmp = $name1; $name1=$name2; $name2=$tmp;}
+	$name1 =~ s/[><()\\\/\?''`\&\%\$\*\+\|\[\]\=]//g;
+	$name2 =~ s/[><()\\\/\?''`\&\%\$\*\+\|\[\]\=]//g;
+
+	# Some checks
+	if ($seqpos_bp eq -1) {print STDERR "Warning no seqpos_bp found in $name\n";}
+	if ($res eq -1) {print STDERR "Warning no residue found in $name\n";}
+	if ($label eq -1) {print STDERR "Warning no label found in $name\n";}
+
+	# Zero correcting
+	$start--;
+	$seqpos_bp--;
+	$res--;
+	$label--;
+	
+	# Reading the positional information
+	my $pos = 0; # Position in the alignment
+	my @nuc;     # The sequence
+	my @bp;      # Basepair information
+
+	while (<>) {
+		if (/^; \*\*\*\*\*/) {last;}
+		my @fields = split(/\s+/);
+		if ($fields[$label] eq "G") {next;} # Skip the gaps
+
+		if ($fields[$seqpos_bp] eq ".") {
+			$bp[$pos] = 0;
+		}
+		else {
+			$bp[$pos] = $fields[$seqpos_bp] - $start;
+		}
+
+		$nuc[$pos] = $fields[$res];
+		$pos++;
+
+	}
+
+	# The energy
+	$score/=-10;
+
+	# Check if the file name exists and make a new one if it does
+	my $nameCount="";
+	my $filename = "$pre$name1-$name2$post";
+	while (-e "$filename") {
+		$nameCount++;
+	   $filename = "$pre$name1-$name2.$nameCount$post";
+	}
+
+	# Make the file
+	my $len = $#nuc+1;
+	open(OUT, ">$filename");
+	print OUT "  $len    ENERGY = $score $name\n";
+	for(my $i=0; $i <= $#nuc; $i++) {
+		printf OUT "%5d", ($i+1);
+		printf OUT " %7s %4d ",$nuc[$i], $i;
+		if ($i < $#nuc) {printf OUT " %4d", ($i+2);}
+		else {print OUT "    0";}
+		printf OUT " %4d", $bp[$i];
+		printf OUT " %4d\n", ($i+1);
+	}
+	close OUT;
+}
+			

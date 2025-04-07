@@ -1,0 +1,259 @@
+; FOLDALIGN           v2.5.3
+; REFERENCE           D. Sundfeld, J.H. Havgaard, A.C. de Melo, and J. Gorodkin
+; REFERENCE           Foldalign 2.5: multithreaded implementation for pairwise
+; REFERENCE           structural RNA alignment.
+; REFERENCE           Bioinformatics 2016, 32(8):1238-1240,
+; REFERENCE           doi: 10.1093/bioinformatics/btv748
+; ALIGNMENT_ID        DQ9355 vs DG2520 two tRNAs
+; ALIGNING            V00158/694-623 against AC069454/82192-82263
+; PARAMETER           max_length=72
+; PARAMETER           max_diff=25
+; PARAMETER           min_loop=3
+; PARAMETER           score_matrix=<default_local>
+; PARAMETER           nobranching=<false>
+; PARAMETER           global=<false>
+; PARAMETER           use_global_pruning=<false>
+; PARAMETER           i=1
+; PARAMETER           j=72
+; PARAMETER           k=1
+; PARAMETER           l=72
+; PARAMETER           no_prune=<false>
+; PARAMETER           min_LS_score=0
+; SEQUENCE_LENGTH     V00158/694-623 = 72
+; SEQUENCE_LENGTH     AC069454/82192-82263 = 72
+; GC_CONTENT_SEQ_1    0.53
+; GC_CONTENT_SEQ_2    0.51
+; SEQUENCE_1_COMMENT  
+; SEQUENCE_2_COMMENT  
+; ALIGN               
+; ALIGN               Score: 823
+; ALIGN               Identity: 40 % ( 29 / 73 )
+; ALIGN               
+; ALIGN               V00158/694-62 Begin 1
+; ALIGN               AC069454/8219 Begin 1
+; ALIGN               
+; ALIGN               V00158/694-62 GCAGAUGUAG CUCAGUGGU- AGAGCGCAAC CUUGCCAAGG
+; ALIGN               Structure     ((((((.((( (((....... .)))).(((( (.......))
+; ALIGN               AC069454/8219 GGUCCCAUGG UGUAAUGGUU AGCACUCUGG ACUUUGAAUC
+; ALIGN               
+; ALIGN               V00158/694-62 UUGAUGCCAU GGGUUCGAGU CCCAUUAUCU GCU
+; ALIGN               Structure     ))).))..(( (((....... ))))).)))) )).
+; ALIGN               AC069454/8219 CAG-CGAUCC GAGUUCAAAU CUCGGUGGGA CCU
+; ALIGN               
+; ALIGN               V00158/694-62 End 72
+; ALIGN               AC069454/8219 End 72
+; ==============================================================================
+; TYPE                RNA
+; COL 1               label
+; COL 2               residue
+; COL 3               seqpos
+; COL 4               alignpos
+; COL 5               align_bp
+; COL 6               seqpos_bp
+; ENTRY               V00158/694-623
+; ALIGNMENT_ID        DQ9355 vs DG2520 two tRNAs
+; ALIGNMENT_LIST      V00158/694-623 AC069454/82192-82263
+; FOLDALIGN_SCORE     823
+; GROUP               1
+; FILENAME            data/tRNA.motif.pair
+; START_POSITION      1
+; END_POSITION        72
+; ALIGNMENT_SIZE      2
+; ALIGNMENT_LENGTH    73
+; SEQUENCE_LENGTH     72
+; SEQUENCE_GC_CONTENT 0.53
+; PARAMETER           max_length=72
+; PARAMETER           max_diff=25
+; PARAMETER           min_loop=3
+; PARAMETER           score_matrix=<default_local>
+; PARAMETER           nobranching=<false>
+; PARAMETER           global=<false>
+; PARAMETER           use_global_pruning=<false>
+; PARAMETER           i=1
+; PARAMETER           j=72
+; PARAMETER           k=1
+; PARAMETER           l=72
+; PARAMETER           no_prune=<false>
+; PARAMETER           min_LS_score=0
+; ------------------------------------------------------------------------------
+N         G         1         1        72        71
+N         C         2         2        71        70
+N         A         3         3        70        69
+N         G         4         4        69        68
+N         A         5         5        68        67
+N         U         6         6        67        66
+N         G         7         7         .         .
+N         U         8         8        46        45
+N         A         9         9        45        44
+N         G        10        10        25        24
+N         C        11        11        24        23
+N         U        12        12        23        22
+N         C        13        13        22        21
+N         A        14        14         .         .
+N         G        15        15         .         .
+N         U        16        16         .         .
+N         G        17        17         .         .
+N         G        18        18         .         .
+N         U        19        19         .         .
+G         -         .        20         .         .
+N         A        20        21         .         .
+N         G        21        22        13        13
+N         A        22        23        12        12
+N         G        23        24        11        11
+N         C        24        25        10        10
+N         G        25        26         .         .
+N         C        26        27        43        42
+N         A        27        28        42        41
+N         A        28        29        41        40
+N         C        29        30        40        39
+N         C        30        31        39        38
+N         U        31        32         .         .
+N         U        32        33         .         .
+N         G        33        34         .         .
+N         C        34        35         .         .
+N         C        35        36         .         .
+N         A        36        37         .         .
+N         A        37        38         .         .
+N         G        38        39        31        30
+N         G        39        40        30        29
+N         U        40        41        29        28
+N         U        41        42        28        27
+N         G        42        43        27        26
+N         A        43        44         .         .
+N         U        44        45         9         9
+N         G        45        46         8         8
+N         C        46        47         .         .
+N         C        47        48         .         .
+N         A        48        49        65        64
+N         U        49        50        64        63
+N         G        50        51        63        62
+N         G        51        52        62        61
+N         G        52        53        61        60
+N         U        53        54         .         .
+N         U        54        55         .         .
+N         C        55        56         .         .
+N         G        56        57         .         .
+N         A        57        58         .         .
+N         G        58        59         .         .
+N         U        59        60         .         .
+N         C        60        61        53        52
+N         C        61        62        52        51
+N         C        62        63        51        50
+N         A        63        64        50        49
+N         U        64        65        49        48
+N         U        65        66         .         .
+N         A        66        67         6         6
+N         U        67        68         5         5
+N         C        68        69         4         4
+N         U        69        70         3         3
+N         G        70        71         2         2
+N         C        71        72         1         1
+N         U        72        73         .         .
+; ******************************************************************************
+; TYPE                RNA
+; COL 1               label
+; COL 2               residue
+; COL 3               seqpos
+; COL 4               alignpos
+; COL 5               align_bp
+; COL 6               seqpos_bp
+; ENTRY               AC069454/82192-82263
+; ALIGNMENT_ID        DQ9355 vs DG2520 two tRNAs
+; ALIGNMENT_LIST      V00158/694-623 AC069454/82192-82263
+; FOLDALIGN_SCORE     823
+; GROUP               1
+; FILENAME            data/tRNA.motif.pair
+; START_POSITION      1
+; END_POSITION        72
+; ALIGNMENT_SIZE      2
+; ALIGNMENT_LENGTH    73
+; SEQUENCE_LENGTH     72
+; SEQUENCE_GC_CONTENT 0.51
+; PARAMETER           max_length=72
+; PARAMETER           max_diff=25
+; PARAMETER           min_loop=3
+; PARAMETER           score_matrix=<default_local>
+; PARAMETER           nobranching=<false>
+; PARAMETER           global=<false>
+; PARAMETER           use_global_pruning=<false>
+; PARAMETER           i=1
+; PARAMETER           j=72
+; PARAMETER           k=1
+; PARAMETER           l=72
+; PARAMETER           no_prune=<false>
+; PARAMETER           min_LS_score=0
+; ------------------------------------------------------------------------------
+N         G         1         1        72        71
+N         G         2         2        71        70
+N         U         3         3        70        69
+N         C         4         4        69        68
+N         C         5         5        68        67
+N         C         6         6        67        66
+N         A         7         7         .         .
+N         U         8         8        46        45
+N         G         9         9        45        44
+N         G        10        10        25        25
+N         U        11        11        24        24
+N         G        12        12        23        23
+N         U        13        13        22        22
+N         A        14        14         .         .
+N         A        15        15         .         .
+N         U        16        16         .         .
+N         G        17        17         .         .
+N         G        18        18         .         .
+N         U        19        19         .         .
+N         U        20        20         .         .
+N         A        21        21         .         .
+N         G        22        22        13        13
+N         C        23        23        12        12
+N         A        24        24        11        11
+N         C        25        25        10        10
+N         U        26        26         .         .
+N         C        27        27        43        43
+N         U        28        28        42        42
+N         G        29        29        41        41
+N         G        30        30        40        40
+N         A        31        31        39        39
+N         C        32        32         .         .
+N         U        33        33         .         .
+N         U        34        34         .         .
+N         U        35        35         .         .
+N         G        36        36         .         .
+N         A        37        37         .         .
+N         A        38        38         .         .
+N         U        39        39        31        31
+N         C        40        40        30        30
+N         C        41        41        29        29
+N         A        42        42        28        28
+N         G        43        43        27        27
+G         -         .        44         .         .
+N         C        44        45         9         9
+N         G        45        46         8         8
+N         A        46        47         .         .
+N         U        47        48         .         .
+N         C        48        49        65        64
+N         C        49        50        64        63
+N         G        50        51        63        62
+N         A        51        52        62        61
+N         G        52        53        61        60
+N         U        53        54         .         .
+N         U        54        55         .         .
+N         C        55        56         .         .
+N         A        56        57         .         .
+N         A        57        58         .         .
+N         A        58        59         .         .
+N         U        59        60         .         .
+N         C        60        61        53        52
+N         U        61        62        52        51
+N         C        62        63        51        50
+N         G        63        64        50        49
+N         G        64        65        49        48
+N         U        65        66         .         .
+N         G        66        67         6         6
+N         G        67        68         5         5
+N         G        68        69         4         4
+N         A        69        70         3         3
+N         C        70        71         2         2
+N         C        71        72         1         1
+N         U        72        73         .         .
+; ******************************************************************************

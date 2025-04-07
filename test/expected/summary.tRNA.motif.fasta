@@ -1,0 +1,45 @@
+; FOLDALIGN           v2.5.3
+; REFERENCE           D. Sundfeld, J.H. Havgaard, A.C. de Melo, and J. Gorodkin
+; REFERENCE           Foldalign 2.5: multithreaded implementation for pairwise
+; REFERENCE           structural RNA alignment.
+; REFERENCE           Bioinformatics 2016, 32(8):1238-1240,
+; REFERENCE           doi: 10.1093/bioinformatics/btv748
+; ALIGNMENT_ID        n.a.
+; ALIGNING            V00158/694-623 against AC069454/82192-82263
+; PARAMETER           max_length=72
+; PARAMETER           max_diff=25
+; PARAMETER           min_loop=3
+; PARAMETER           score_matrix=<default_local>
+; PARAMETER           nobranching=<false>
+; PARAMETER           global=<false>
+; PARAMETER           use_global_pruning=<false>
+; PARAMETER           i=1
+; PARAMETER           j=72
+; PARAMETER           k=1
+; PARAMETER           l=72
+; PARAMETER           no_prune=<false>
+; PARAMETER           min_LS_score=0
+; SEQUENCE_LENGTH     V00158/694-623 = 72
+; SEQUENCE_LENGTH     AC069454/82192-82263 = 72
+; GC_CONTENT_SEQ_1    0.53
+; GC_CONTENT_SEQ_2    0.51
+; SEQUENCE_1_COMMENT  DG2520
+; SEQUENCE_2_COMMENT  DQ9355
+; ALIGN               
+; ALIGN               Score: 823
+; ALIGN               Identity: 40 % ( 29 / 73 )
+; ALIGN               
+; ALIGN               V00158/694-62 Begin 1
+; ALIGN               AC069454/8219 Begin 1
+; ALIGN               
+; ALIGN               V00158/694-62 GCAGAUGUAG CUCAGUGGU- AGAGCGCAAC CUUGCCAAGG
+; ALIGN               Structure     ((((((.((( (((....... .)))).(((( (.......))
+; ALIGN               AC069454/8219 GGUCCCAUGG UGUAAUGGUU AGCACUCUGG ACUUUGAAUC
+; ALIGN               
+; ALIGN               V00158/694-62 UUGAUGCCAU GGGUUCGAGU CCCAUUAUCU GCU
+; ALIGN               Structure     ))).))..(( (((....... ))))).)))) )).
+; ALIGN               AC069454/8219 CAG-CGAUCC GAGUUCAAAU CUCGGUGGGA CCU
+; ALIGN               
+; ALIGN               V00158/694-62 End 72
+; ALIGN               AC069454/8219 End 72
+; ==============================================================================

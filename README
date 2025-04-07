@@ -1,0 +1,230 @@
+This is the README file for FOLDALIGN version 2.5
+
+CONTENTS:
+=========
+
+1.  LEGAL NOTICE
+2.  CITATION
+3.  WEBSITE
+4.  INSTALLATION
+5.  FOLDALIGN USAGE SUMMARY
+6.  SCRIPTS
+7.  SCORE MATRICES
+8.  DIRECTORIES
+9.  EXAMPLES
+
+
+-------------------------------------------------------------------------------
+1. LEGAL NOTICE
+===============
+
+/******************************************************************************
+*                                                                             *
+*   Copyright 2004-2015 Jakob Hull Havgaard and Daniel Sundfeld, hull@rth.dk  *
+*                                                                             *
+*   This file is part of FOLDALIGN                                            *
+*                                                                             *
+*   FOLDALIGN is free software; you can redistribute it and/or modify         *
+*   it under the terms of the GNU General Public License as published by      *
+*   the Free Software Foundation; either version 2 of the License, or         *
+*   (at your option) any later version.                                       *
+*                                                                             *
+*   FOLDALIGN is distributed in the hope that it will be useful,              *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+*   GNU General Public License for more details.                              *
+*                                                                             *
+*   You should have received a copy of the GNU General Public License         *
+*   along with FOLDALIGN; if not, write to the Free Software                  *
+*   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA *
+*                                                                             *
+******************************************************************************/
+
+
+
+-------------------------------------------------------------------------------
+2. CITATION:
+============
+
+Sundfeld et al. Sundfeld et al. Bioinformatics 2016, 32(8):1238-1240
+
+
+-------------------------------------------------------------------------------
+3. WEBSITE:
+===========
+
+http://rth.dk/resources/foldalign
+
+Extra documentation is avilable at the website.
+
+
+
+-------------------------------------------------------------------------------
+4. INSTALLATION:
+================
+
+In the FOLDALIGN directory type:
+make
+
+This should build the foldalign and locateHits binaries.
+
+-------------------------------------------------------------------------------
+5. FOLDALIGN USAGE SUMMARY:
+===========================
+
+bin/foldalign [options] input_files
+
+The input_files are by default assumed to be in fasta format. If one file is
+given then all sequences are aligned to all the other sequences in that file.
+If two files are given then all sequences in the first file are aligned to all
+the sequences in the second file. Files in the tab format (see the format
+option) are treated in the same way. When using the pair format only one file
+can be read, and only the respective pairs are aligned.
+
+The most important options are
+-h or -help          Prints the help text for all options. Including those not
+                     described here.
+
+-max_length <number> Set the maximum motif length (lambda) to <number>. This
+                     option is vital for memory and time consumption.
+
+-max_diff <number>   Set the maximum length difference (delta) to <number>. This
+                     option is vital for memory and time consumption.
+
+-score_matrix <file_name> Change the default score matrix to the one in the file
+		     <file_name>. An example of a score matrix is in the file
+		     called:
+		     scorematrix/scanning.default.fmat
+		     The values in this matrix are the same as the default
+		     values (The default values are hardcode in the
+		     src/scorematrix.cxx file).
+
+-format <type>       Controls the input format. FOLDALIGN can handle four input
+                     formats: fasta (one or two fasta files), tab
+		     (one or two tab delimited files, format:
+		     name\sequence\tnot_used\tcomment), pair (one file only.
+		     format: name_1\tseq_1\tname_2\tseq_2\toption1 option2 ...),
+		     commandline (two sequences on the commandline).
+
+-plot_score	     Print the best alignment score for each pair of positions
+                     in the two sequences. Produces a lot of output.
+
+-global  	     Make global alignments instead of local alignments.
+
+-output_format summary Limits the output to the header, which makes it easier for
+                     a human to look at the structures. Be warned that some of
+		     the often used information is missing in this output.
+
+
+
+-------------------------------------------------------------------------------
+6. SCRIPTS:
+===========
+
+locateHits.
+  The locateHits finds non-overlapping hits in FOLDALIGN output. It reads from
+  standard in or files. FOLDALIGN has to be run with option -plot_score.
+
+  The output from locateHits is:
+  Name_of_the_first_sequence Start_position_in_sequence_1
+  End_position_in_sequence_1 Name_sequence_2 Start_position_2 End_position_2
+  Hit_score P-value Rank
+
+scalematrix.
+  This script rescales the single strand and base-pair substitution parts of a
+  score matrix. Three pre-clustered but unscaled score-matrices can be found in
+  the scorematrix directory. Use option -help to print the script's help text.
+
+
+
+-------------------------------------------------------------------------------
+7. SCORE MATRICES:
+==================
+
+Seven score matrices have been included in the scorematrix directory. FOLDALIGN
+has a build in score matrix. It is therefore only necessary to change the
+parameters which have values different from the defaults. The matrix
+scanning.default.fmat contains the default values. There are three matrices
+containing all parameters, and which are ready for use:
+  
+scanning.default.fmat
+  Is the default score matrix. This matrix is good for scanning and predicting
+  structures without large inserts.
+  
+structure.fmat
+  Is better for structure prediction when there are inserts.
+  
+global.fmat
+  Is a matrix optimize to make global alignments (primarily on tRNAs).
+  
+To change FOLDALIGN's dependency on sequence similarity it is only necessary to
+change the two similarity matrices. Four unscaled Ribosum-Like matrices are
+included:
+
+RL0.pus-fmat, RL40.pus-fmat, RL70.pus-fmat, and RL100.pus-fmat. 
+
+These matrices are Ribosum-Like matrices (Partial and UnScaled) with different
+levels of clustering. The RL.0.fmat matrix is a no-similarity matrix, and the
+RL.100.fmat matrix no clustering has been used. The substitution scores in
+these matrices are very high compared to the energy parameters. They can be
+scaled down with the scalematrix script.
+
+Extra documentation and examples are available in the documentation part of the
+web-site: http://rth.dk/resources/foldalign
+
+
+-------------------------------------------------------------------------------
+8. DIRECTORIES:
+===============
+
+  bin          contains the FOLDALIGN program and the scripts.
+  data         contains examples of the data formats, and a color.scale file.
+  scorematrix  contains examples of score matrices.
+  src          contains the source code for FOLDALIGN.
+
+
+
+-------------------------------------------------------------------------------
+9. EXAMPLES:
+============
+
+A quick test:
+
+  bin/foldalign -format commandline  AAAAAAAAUUUUU GGGGGGGGGGGGCCCCCCCC
+
+Local structure prediction:
+
+  bin/foldalign -ID "tRNA local alignment" data/tRNA.motif.fasta
+
+Global structure prediction:
+
+  bin/foldalign -global -score_matrix scorematrix/global.fmat -max_diff 15  -format tab -ID "tRNA global alignment" data/tRNA.motif.tab
+
+Scan:
+
+  bin/foldalign -plot_score -max_diff 15 -ID "tRNA scan" -format pair data/tRNA.500.pair | gzip > tRNA.scan.col.gz
+
+  The -max_length and -ID parameters are set in the data file. This alignment
+  should take hours to complete.
+
+  The output from a scan can be processed with the locateHits script:
+
+  gunzip -c tRNA.scan.col.gz | bin/locateHits > hitlist
+  
+Multiple sequences:
+
+  This file contains three sequences in fasta format. This produces three
+  alignments.
+
+  bin/foldalign -max_diff 15 -ID "Test sequences" -summary data/random1.fasta
+
+  This alignes the three sequences in the first file to the two sequences in the
+  second file.
+  
+  bin/foldalign -max_diff 15 -ID "Test sequences" -summary data/random1.fasta data/random2.fasta
+
+Rescaling a matrix:
+
+  bin/scalematrix -ss=0 -bp=0.025 scorematrix/RL40.pus-fmat > RL40_0_0.025.fmat
+  
+  bin/foldalign  -max_diff 15 -score_matrix RL40_0_0.025.fmat -ID "tRNA local alignment" data/tRNA.motif.fasta

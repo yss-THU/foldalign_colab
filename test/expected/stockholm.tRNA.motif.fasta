@@ -1,0 +1,46 @@
+# STOCKHOLM 1.0
+
+#=GF VERSION            v2.5.3
+#=GF REFERENCE          D. Sundfeld, J.H. Havgaard, A.C. de Melo, and J. Gorodkin
+#=GF REFERENCE          Foldalign 2.5: multithreaded implementation for pairwise
+#=GF REFERENCE          structural RNA alignment.
+#=GF REFERENCE          Bioinformatics 2016, 32(8):1238-1240,
+#=GF REFERENCE          doi: 10.1093/bioinformatics/btv748
+#=GF ID                 n.a.
+#=GF SEQUENCE_NAMES     V00158/694-623 against AC069454/82192-82263
+#=GF PARAMETER          max_length=72
+#=GF PARAMETER          max_diff=25
+#=GF PARAMETER          min_loop=3
+#=GF PARAMETER          score_matrix=<default>
+#=GF PARAMETER          nobranch=<false>
+#=GF PARAMETER          global=<false>
+#=GF PARAMETER          use_global_pruning=<false>
+#=GF PARAMETER          i=1
+#=GF PARAMETER          j=72
+#=GF PARAMETER          k=1
+#=GF PARAMETER          l=72
+#=GF PARAMETER          no_pruning=<false>
+#=GF PARAMETER          min_LS_score=0
+#=GS V00158/694-623     COMMENT            DG2520
+#=GS AC069454/82192-82263 COMMENT            DQ9355
+#=GS V00158/694-623     LENGTH             72
+#=GS AC069454/82192-82263 LENGTH             72
+#=GS V00158/694-623     GC_CONTENT         0.527778
+#=GS AC069454/82192-82263 GC_CONTENT         0.513889
+#=GS V00158/694-623     INPUTFILE          data/tRNA.motif.fasta
+#=GS AC069454/82192-82263 INPUTFILE          data/tRNA.motif.fasta
+
+#=GS V00158/694-623     START_POSITION     1
+#=GS AC069454/82192-82263 START_POSITION     1
+#=GS V00158/694-623     END_POSITION       72
+#=GS AC069454/82192-82263 END_POSITION       72
+
+#=GF SCORE              823
+#=GF ALIGNMENT_IDENTITY 40 % ( 29 / 73 )
+#=GF ALIGNMENT_LENGTH   73
+
+V00158/694-623          GCAGAUGUAGCUCAGUGGU-AGAGCGCAACCUUGCCAAGGUUGAUGCCAUGGGUUCGAGUCCCAUUAUCUGCU
+AC069454/82192-82263    GGUCCCAUGGUGUAAUGGUUAGCACUCUGGACUUUGAAUCCAG-CGAUCCGAGUUCAAAUCUCGGUGGGACCU
+#=GC SS_cons            ((((((.((((((........)))).(((((.......))))).))..(((((.......))))).)))))).
+
+//

@@ -1,0 +1,36 @@
+#!/usr/bin/perl -sw
+
+use strict;
+
+updateFAtest("", "data/tRNA.motif.fasta", "default.tRNA.motif.fasta");
+updateFAtest("-score_matrix scorematrix/scanning.default.fmat", "data/tRNA.motif.fasta", "scorematrix.tRNA.motif.fasta");
+updateFAtest("-format tab", "data/tRNA.motif.tab", "default.tRNA.motif.tab");
+updateFAtest("-format pair", "data/tRNA.motif.pair", "default.tRNA.motif.pair");
+
+updateFAtest("-output_format summary", "data/tRNA.motif.fasta", "summary.tRNA.motif.fasta");
+updateFAtest("-output_format stockholm", "data/tRNA.motif.fasta", "stockholm.tRNA.motif.fasta");
+
+updateFAtest("-global", "data/tRNA.motif.fasta", "global.tRNA.motif.fasta");
+updateFAtest("-plot_score", "data/tRNA.motif.fasta", "plot_score.tRNA.motif.fasta");
+
+updateFAtest("-max_diff 1", "data/tRNA.motif.fasta", "delta1.tRNA.motif.fasta");
+updateFAtest("-max_length 20", "data/tRNA.motif.fasta", "lambda20.tRNA.motif.fasta");
+
+#updateFAconstraintTest("data/tRNA.500.nl.pair", "constraints.tRNA.500.nl.pair");
+
+sub updateFAtest {
+
+	my ($options, $data, $expectedName) = @_;
+
+	print `bin/foldalign $options $data > test/expected/$expectedName`;
+}
+
+sub updateFAconstraintTest {
+
+	my ($data, $resultName) = @_;
+	
+	`bin/foldalign -print_seed_constraints -max_length 30 -no_backtrack -format pair $data | grep Cons. | gawk '\$5 + \$6 > 0 || \$1 == "MAX_LENGTH:"' > test/expected/constraints`;
+	`cp test/expected/constraints test/results/constraints`;
+	`bin/foldalign -seed_constraints test/results/constraints -plot_score -format pair $data > test/expected/$resultName`;
+	`rm test/results/constraints`;
+}

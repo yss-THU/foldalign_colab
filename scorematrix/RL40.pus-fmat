@@ -1,0 +1,33 @@
+# The FOLDALIGN program assumes that score matrix paramters which are not set
+# in the score matrix file have default values.
+
+# Scorematrix format
+# X-axis: i & j. Y-axis k & l
+Base-pair substitution:
+A    A    A    A    C    C    C    C    G    G    G    G    U    U    U    U
+A    C    G    U    A    C    G    U    A    C    G    U    A    C    G    U
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 A A
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 A C
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 A G
+0    0    0  325    0    0  194    0    0  276    0   54  186    0   47    0 A U
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 C A
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 C C
+0    0    0  194    0    0  287    0    0  184    0  -17  308    0   65    0 C G
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 C U
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 G A
+0    0    0  276    0    0  184    0    0  464    0   80  237    0 -306    0 G C
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 G G
+0    0    0   54    0    0  -17    0    0   80    0  121   87    0 -175    0 G U
+0    0    0  186    0    0  308    0    0  237    0   87  389    0   99    0 U A
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 U C
+0    0    0   47    0    0   65    0    0 -306    0 -175   99    0   62    0 U G
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 U U
+
+# Initmatrix format
+# X-axis i. Y-axis j
+Single strand substitution:
+    A     C     G     U 
+   73  -150  -122  -119 A
+ -150   101  -231   -92 C
+ -122  -231    69  -146 G
+ -119   -92  -146    40 U

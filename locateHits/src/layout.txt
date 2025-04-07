@@ -1,0 +1,34 @@
+Algorithm:
+
+   Read the FOLDALIGN output to get the LS lines.
+   
+   Use the LS lines to build a sorted list of alignments with a score above a cutoff
+   
+   Foreach element in the list check if there is a better scoring overlapping hit. Start from the top. If not add the alignment to the hitlist.
+   
+----------------------------------------------------------------------------
+
+Structure:
+
+   nohit.hxx: Main header file. Defines a few things.
+   revnumber.hxx: Defines the revision number.
+
+   nohit.cxx: Main function. Uses processEntry to process the output of each foldalign pair. Uses arguments.cxx to handle options.   
+
+   arguments.cxx: Handles options. Uses helper.cxx.
+   helper.cxx: Some general functions. Print nicely, copy array and similar stuff.
+   
+   processEntry: Reads the output of a foldalign run. Parses the header. Builds a list (datalist.cxx) of alignments with a score above the cutoff. Makes a list (nonoverlap.cxx, datalist.cxx) of non-overlapping alignments, and prints it. Discards the remaining part of the foldalign entry.
+
+   nonoverlap.cxx: Takes the alignments from a list (datalist.cxx) and builds a list of nonoverlapping alignments in a new list (datalist.cxx).
+
+   datalist.cxx: A sorted hash. The scores are used as keys. The score of a new addition is checked from the bottom->up.
+
+   alignmentCells.cxx: Stores the four coordinates of an alignment.
+
+
+------------------------------------------------------------------------------
+
+Note:
+
+processEntry.cxx: As the foldalign format does not indicate precisely the border between two alignments, and since the output can differ dependend on the options used (for example option -summary) processEntry in some cases breaks out of the header parsing algorithm by throwing an exception eventhough no error has occured. This behavior will hopefully change soon.

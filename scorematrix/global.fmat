@@ -1,0 +1,44 @@
+# The FOLDALIGN program assumes that score matrix paramters which are not set
+# in the score matrix file have default values. These can be seen in the
+# scanning.default.fmat file.
+
+Pruning:
+1	-200
+
+Miscellaneous:
+Gap_open:                        -50
+Elongation_bonus:                -25
+Stem_gap_open:		        -100
+Stem_gap_elongation_bonus:       -50
+Linear_prunings_coefficient:       1
+
+# Scorematrix format
+# X-axis: i & j. Y-axis k & l
+Base-pair substitution:
+A    A    A    A    C    C    C    C    G    G    G    G    U    U    U    U
+A    C    G    U    A    C    G    U    A    C    G    U    A    C    G    U
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 A A
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 A C
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 A G
+0    0    0   21    0    0    5    0    0    9    0    0    4    0   -6    0 A U
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 C A
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 C C
+0    0    0    5    0    0   26    0    0   10    0   -2   10    0    2    0 C G
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 C U
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 G A
+0    0    0    9    0    0   10    0    0   28    0    4    4    0   -2    0 G C
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 G G
+0    0    0    0    0    0   -2    0    0    4    0   17   -2    0   -9    0 G U
+0    0    0    4    0    0   10    0    0    4    0   -2   24    0    1    0 U A
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 U C
+0    0    0   -6    0    0    2    0    0   -2    0   -9    1    0   16    0 U G
+0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 U U
+
+# Initmatrix format
+# X-axis i. Y-axis j
+Single strand substitution:
+    A     C     G     U 
+   10   -10    -8    -9 A
+  -10     6   -12    -7 C
+   -8   -12     5   -10 G
+   -9    -7   -10     6 U

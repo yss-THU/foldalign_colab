@@ -1,0 +1,30 @@
+Foldalign version 2.5.3
+Major bugfix affecting global alignments. Global alignments from version 2.5.0 -> 2.5.2 may need to be realigned. Especially those where no alignment was found. Local alignments are unaffected.
+
+Foldalign version 2.5.2
+Minor changes:
+1: locateHits is now by default limited to printing out the 1,000 best non-overlapping hits. To get the old default behavior of printing out all non-overlapping hits with a score above 0, set the parameter ... to -1. This change has little or no effect for short sequences, but for long sequences locateHits will be much faster.
+2: The scores were changed to int meaning that the score of long alignments will not overflow. This also means that Foldalign will use a constant factor more memory.
+
+
+Foldalign version 2.5.1_long_sequences
+Minor changes:
+Foldalign and locateHits where recompiled using bigger integers to handle longer sequences. This makes the memory consumption larger by a constant factor. Scores are not changed.
+
+Foldalign version 2.5.1
+
+Minor changes:
+1: \r at the end of line in a file is deleted when the line is read into the program. This is only important if a file has passed through a windows machine at some time and has been changed to end lines with \r\n rather than the usual \n.
+2: The reference in the output is now correct
+
+Foldalign version 2.5.0
+
+A major update please see the Sundfeld et al paper. Bioinformatics in press.
+
+The most important changes are:
+1: Multithreading. Use option -number_of_processors <number> to set the number of cores used by foldalign
+2: LocateHits now has build in parameters for the extreme value distribution. These are GC-content dependent. Note the values have changed since preRelese 2.
+3: It is now possible to use different gap penalties for gaps in stem and in single strand regions. This is not use by default.
+4: Alignments can be output in stockholm format. Default column format.
+
+There are many other minor changes.
